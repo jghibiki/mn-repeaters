@@ -10,9 +10,17 @@ def parse_line(line):
     columns=line.replace("<-", "").strip().split()
 
     # find the position of the region code to know how many tokens the city name takes up
+    previous_token = None
     for i, token in enumerate(columns):
-        if(len(token)) == 2:
+        print(previous_token, token)
+        token_is_st = token == "ST"
+        previous_is_statewide = previous_token == "STATEWIDE"
+        must_be_st_paul = token_is_st and not previous_is_statewide
+        token_is_le = token == "LE" # Must be Le Center
+
+        if len(token) == 2 and not must_be_st_paul and not token_is_le:
             break
+        previous_token = token
 
     city = " ".join(columns[0:i])
     region = columns[i]
